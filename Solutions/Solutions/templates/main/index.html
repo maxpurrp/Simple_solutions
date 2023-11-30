@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ item.name }}</title><br>
+    <script src="https://js.stripe.com/v3/"></script>
+  </head>
+  <body>
+    <center><h1>{{ item.name }}</h1></center>
+    <center><p>{{ item.description }}</p></center>
+    <center><p>Price: {{ item.price }}</p></center>
+    {% if order %}
+    <center>The cost of the entire order {{ order.total_price }}</center>
+    {% endif %}
+    {% for item in order.items %}
+      <center><p>Items in order: {{ item }}</p></center>
+    {% endfor %}
+    <center><form action="/add/{{ item.id }}"><button type="submit" >Add in Order</button></form></center><br>
+    <center><button onclick="redirectToCheckout('{{ item.id }}')">Buy</button></center>
+
+    <script>
+      function redirectToCheckout(id) {
+        fetch(`/buy/${id}`)
+          .then(response => response.json())
+          .then(data => {
+            const stripe = Stripe(process.env.public_key);
+            stripe.redirectToCheckout({
+              sessionId: data.session_id
+            });
+          });
+      }
+    </script>
+  </body>
+</html>
