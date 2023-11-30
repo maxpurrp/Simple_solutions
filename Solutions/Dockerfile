@@ -16,7 +16,7 @@ ENV public_key "YOUR PUBLIC KEY FOR STRIPE"
 
 # Install any needed packages specified in requirements.txt
 RUN pip install -r requirements.txt
-
+RUN python manage.py migrate --run-syncdb 
 # Make port 80 available to the world outside this container
 EXPOSE 8000
 
